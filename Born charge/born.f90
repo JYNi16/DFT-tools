@@ -1,4 +1,4 @@
-program born effective charge
+program borncharge
    implicit none
    real(8) :: b(100,3), a(100,3), diff(100,3), P(3), lattice(3,3), diff_xyz(100,3), born(300,3) 
    integer :: i, j, k, num, m, n 
