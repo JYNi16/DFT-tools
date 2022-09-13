@@ -1,50 +1,108 @@
-# This code is used to make a supercell 
-import numpy as np 
+#This script is coded for making supercell
+#Author: njy 
+
 import math 
 import re 
+import numpy as np 
 
-s = input("please input the da db dc:")
-s = [float(s) for s in s.split()]
-da = int(s[0])
-db = int(s[1])
-dc = int(s[2])
-sup = da*db*dc
+class make_sc():
+    
+    def __init__(self, da, db, dc):
+        
+        self.da = da
+        self.db = db 
+        self.dc = dc 
+        self.sup = da*db*dc
+        self.sup_l = [da, db, dc]
+        self.f1 = open('POSCAR','r')
+        self.f2 = open('supercell.vasp', 'a')
+    
+    def ele_name(self, ele_or):       
+        ele_cn = ''
+        ele_s = [str(st) for st in ele_or.split()]
+        for i in range(len(ele_s)):
+            ele_cn += "    "
+            ele_cn += str(ele_s[i])    
+        return ele_cn
+    
+    def ele_lat(self, ele_or):       
+        ele_cn = ''
+        ele_s = [float(st) for st in ele_or.split()]
+        for i in range(len(ele_s)):
+            ele_cn += "    "
+            ele_cn += str(np.round(ele_s[i] * self.sup_l[i], 7))   
+        return ele_cn
+    
+    def ele_num(self, ele_or):
+        ele_cn = ""        
+        ele_s = [int(st) for st in ele_or.split()]
+        for i in range(len(ele_s)):
+            ele_cn += "    "
+            ele_cn += str(ele_s[i] * self.sup) 
+        nums = sum(ele_s) 
+        return ele_cn, nums
+    
+    def ele_coord(self, ele_or, j, k, l, delta_a, delta_b, delta_c):
+        ele_cn = ""
+        sup_idx = [j, k, l]
+        sup_delta = [delta_a, delta_b, delta_c]
+        ele_s = [float(st) for st in ele_or.split()]
+        for i in range(len(ele_s)):
+            ele_cn += "    "
+            ele_cn += str(np.round(((ele_s[i]/self.sup_l[i])+(sup_idx[i]*sup_delta[i]))%1,7))
+            print
+        
+        return ele_cn 
+    
+      
+    def fill(self):
+        
+        #f2 = open('supercell.vasp', 'a')
+        
+        self.f1.readline()
+        self.f1.readline()
+        print('supercell', file=self.f2)
+        print('1.0', file=self.f2)
+        a = self.f1.readline()
+        lat_a = self.ele_lat(a)
+        print(lat_a, file=self.f2)
+        b = self.f1.readline()
+        lat_b = self.ele_lat(b)
+        print(lat_b, file=self.f2)
+        c = self.f1.readline()
+        lat_c = self.ele_lat(c)
+        print(lat_c, file=self.f2)
+        elename = self.f1.readline()
+        ele_name = self.ele_name(elename)
+        print(ele_name, file=self.f2)
+        
+        elenum = self.f1.readline()
+        ele_num, total_elenum = self.ele_num(elenum)
+        print("total_elenum is:", total_elenum)
+        print(ele_num, file=self.f2)
+        self.f1.readline()
+        print('Direct', file=self.f2)
+         
+        for i in range(total_elenum):
+            idx = self.f1.readline()
+            print("idx is:", idx)
+            #idx = [float(s) for s in idx.split()]
+            delta_a = round(1/self.da, 6)
+            delta_b = round(1/self.db, 6)
+            delta_c = round(1/self.dc, 6)
+            for j in range(self.da): 
+                for k in range(self.db):
+                    for l in range(self.dc):
+                        coord = self.ele_coord(idx, j, k, l, delta_a, delta_b, delta_c)
+                        print(coord, file=self.f2)
+                        print("coord is:", coord)
+    		
+    def close(self):
+        self.f1.close()
+        self.f2.close()
 
-with open('supercell.vasp','a') as f2:
-	with open('POSCAR','r') as f1: 
-		f1.readline()
-		f1.readline()
-		print('supercell',file=f2)
-		print('1.0',file=f2)
-		a = f1.readline()
-		a = [float(s) for s in a.split()]
-		print('  ',round(a[0]*da,7),'  ',round(a[1]*da,7),'  ',round(a[2]*da,7),file=f2) 
-		b = f1.readline()
-		b = [float(s) for s in b.split()]
-		print('  ',round(b[0]*db,7),'  ',round(b[1]*db,7),'  ',round(b[2]*db,7),file=f2)
-		c = f1.readline()
-		c = [float(s) for s in c.split()]
-		print('  ',round(c[0]*dc,7),'  ',round(c[1]*dc,7),'  ',round(c[2]*dc,7),file=f2) 
-		elename = f1.readline()
-		elename = [str(s) for s in elename.split()]
-		elenum = f1.readline()
-		elenum = [int(s) for s in elenum.split()]
-		f1.readline()
-		print('   ',elename[0],'   ',elename[1],file=f2)
-		print('   ',elenum[0]*sup,'   ',elenum[1]*sup,'  ',file=f2)
-		print('Direct',file=f2)
-		total_elenum = elenum[0] + elenum[1]
-		for i in range(total_elenum):
-			i = f1.readline()
-			i = [float(s) for s in i.split()]
-			delta_a = round(1/da, 6)
-			delta_b = round(1/db, 6)
-			delta_c = round(1/dc, 6)
-			for j in range(da): 
-				for k in range(db):
-					for l in range(dc):
-						print('    ',round(((i[0]/da)+(j*delta_a))%1,7),'   ', round(((i[1]/db)+(k*delta_b))%1,7),'   ', round(((i[2]/dc)+(l*delta_c))%1,7),file=f2)
-
-
-
-
+if __name__=="__main__":
+    sup = make_sc(1,2,2)
+    sup.fill()
+    sup.close()
+    
