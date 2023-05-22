@@ -6,4 +6,5 @@ Various scripts for Vienna Ab initio Simulation Package.
 4. Supercell : scripts for making supercell coded by python. 
 5. Band structure : scripts for band structure calculation coded by fortran. 
 6. diff_POSCAR : scripts for making finite difference between two POSCAR files, such as FE and PE.
+7. Fitting_scripts : scripts for fitting physical parameters such as Heisenberg parameters ...
 
