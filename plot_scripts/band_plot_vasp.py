@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Jun  6 12:58:14 2023
+@author: Ni Jinyang 
 
-@author: 26526
+1. This script is coded for plot the band structure
+2. The data is preprocessed by the Vaspkit 
+
 """
 import numpy as np
 import matplotlib.pyplot as plt 
@@ -46,6 +49,5 @@ def plot_band():
     plt.xticks(k_sym_points, k_sym_label)
     plt.show()
     
-
 if __name__=="__main__":
     plot_band()
