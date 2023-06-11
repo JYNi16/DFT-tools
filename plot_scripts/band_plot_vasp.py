@@ -4,7 +4,7 @@ Created on Tue Jun  6 12:58:14 2023
 @author: Ni Jinyang 
 
 1. This script is coded for plot the band structure
-2. The data is preprocessed by the Vaspkit 
+2. Input datas include two files -- xx_UP.dat and xx__DN.dat, which are preprocessed by the Vaspkit 
 
 """
 import numpy as np
