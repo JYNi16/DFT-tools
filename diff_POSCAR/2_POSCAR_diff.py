@@ -3,35 +3,41 @@
 import numpy as np 
 import math 
 
+def not_empty(s):
+    return s and s.strip()
 
 def read_files(filename):
     '''
     str:filename
     ion_x, ion_y, ion_z : the
     '''
-    ion_x, ion_y, ion_z = [], [], [] 
-    
+    ion_x, ion_y, ion_z = [], [], []
     with open(filename,'r') as f1: 
-    	f1.readline()
-    	f1.readline()
-    	a1 = f1.readline() 
-    	a1 = [float(s) for s in a1.split()]
-    	b1 = f1.readline()
-    	b1 = [float(s) for s in b1.split()]
-    	c1 = f1.readline()
-    	c1 = [float(s) for s in c1.split()]
-    	elename = f1.readline()
-    	elename = elename.split()
-    	elenum = f1.readline() 
-    	elenum = [int(s) for s in elenum.split()]
-    	num = elenum[0] + elenum[1] + elenum[2]
-    	f1.readline()
-    	lines = f1.readlines()
-    	for line in lines:
-    		value = [float(s) for s in line.split()]
-    		ion_x.append(value[0])
-    		ion_y.append(value[1])
-    		ion_z.append(value[2])
+        f1.readline()
+        f1.readline()
+        a1 = f1.readline() 
+        a1 = [float(s) for s in a1.split()]
+        b1 = f1.readline()
+        b1 = [float(s) for s in b1.split()]
+        c1 = f1.readline()
+        c1 = [float(s) for s in c1.split()]
+        elename = f1.readline()
+        elename = elename.split()
+        elenum = f1.readline() 
+        elenum = [int(s) for s in elenum.split()]
+        num = elenum[0] + elenum[1] + elenum[2]
+        f1.readline()
+        lines = f1.readlines()
+        lines = filter(not_empty, lines)
+        #print("lines is:", lines)
+        for line in lines:
+            print("line is:", line)
+            value = [float(s) for s in line.split()]
+            #print("value is:", value)
+            ion_x.append(value[0])
+            ion_y.append(value[1])
+            ion_z.append(value[2])
+    
     f1.close() 
     
     return ion_x, ion_y, ion_z, elenum, elename, a1, b1, c1
@@ -55,7 +61,7 @@ def diff_pos_FE_PE(N, ion_PE_x, ion_PE_y, ion_PE_z, ion_FE_x, ion_FE_y, ion_FE_z
     return delta_x, delta_y, delta_z  
 
 def write_pos(num, ion_PE_x, ion_PE_y, ion_PE_z, elenum, elename, a1, b1, c1, a2, b2, c2, delta_x, delta_y, delta_z):
-    print("elenum is:", elenum, "elename is:", len(elename))
+    print("elenum is:", elenum, "elename is:", len(elename), "num is:", num)
     
     for i in range(num): 
     	s = 'POSCAR' + '_'+str(i)
@@ -68,15 +74,9 @@ def write_pos(num, ion_PE_x, ion_PE_y, ion_PE_z, elenum, elename, a1, b1, c1, a2
     		print(' ',elename[0],'  ',elename[1],'   ', elename[2], file = f3)
     		print(' ',elenum[0],'   ',elenum[1],'   ', elenum[2], file = f3)
     		print('Direct',file = f3)
-    		for j in range(0,1):
+            
+    		for j in range(0, np.sum(elenum)):
     			print('  ',(i*delta_x[j]+ion_PE_x[j])%1.0,'   ', (i*delta_y[j]+ion_PE_y[j])%1.0,'   ', (i*delta_z[j]+ion_PE_z[j])%1.0, file=f3)
-    		for k in range(1,2):
-    			print('  ',(i*delta_x[k]+ion_PE_x[k])%1.0,'   ', (i*delta_y[k]+ion_PE_y[k])%1.0,'   ', (i*delta_z[k]+ion_PE_z[k])%1.0, file=f3)
-    		for l in range(2,5):
-    			print('  ',(i*delta_x[l]+ion_PE_x[l])%1.0,'   ', (i*delta_y[l]+ion_PE_y[l])%1.0,'   ', (i*delta_z[l]+ion_PE_z[l])%1.0, file=f3)
-    		#for l in range(elenum[2],elenum[3]):
-    			#print((delta_x[l]+ion_PE_x[l])%1.0,'   ', (delta_y[l]+ion_PE_y[l])%1.0,'   ', (delta_z[l]+ion_PE_y[l])%1.0, file=f3)
-
 
 def main(diff_num):
     

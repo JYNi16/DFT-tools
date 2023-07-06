@@ -6,6 +6,9 @@ Created on Mon Jun 12 15:57:29 2023
 """
 import numpy as np
 
+def not_empty(s):
+    return s and s.strip()
+
 class diff_POSCAR():
     
     def __init__(self, diff_nums):
@@ -44,6 +47,7 @@ class diff_POSCAR():
             self.ele_num = elenum[0] + elenum[1] + elenum[2]
             f1.readline()
             lines = f1.readlines()
+            lines = filter(not_empty, lines)
             
             if "PE" in filename:
                 for line in lines:
