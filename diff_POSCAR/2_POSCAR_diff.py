@@ -25,7 +25,7 @@ def read_files(filename):
         elename = elename.split()
         elenum = f1.readline() 
         elenum = [int(s) for s in elenum.split()]
-        num = elenum[0] + elenum[1] + elenum[2]
+        num = np.sum(elenum)
         f1.readline()
         lines = f1.readlines()
         lines = filter(not_empty, lines)
@@ -62,26 +62,27 @@ def diff_pos_FE_PE(N, ion_PE_x, ion_PE_y, ion_PE_z, ion_FE_x, ion_FE_y, ion_FE_z
 
 def write_pos(num, ion_PE_x, ion_PE_y, ion_PE_z, elenum, elename, a1, b1, c1, a2, b2, c2, delta_x, delta_y, delta_z):
     print("elenum is:", elenum, "elename is:", len(elename), "num is:", num)
-    
+    num_atom = np.sum(elenum)
+    elenum_s = [str(s) for s in elenum]
     for i in range(num): 
     	s = 'POSCAR' + '_'+str(i)
     	with open(s,'w') as f3: 
-    		print(elename[0],'  ', elename[1],'   ',elename[2], file = f3)
+    		print(" ".join(elename), file = f3)
     		print('1.0',file=f3)
     		print('   ',((a2[0]-a1[0])/num)*i + a1[0],'   ', ((a2[1]-a1[1])/num)*i + a1[1],'   ', ((a2[2]-a1[2])/num)*i + a1[2], file=f3)
     		print('   ',((b2[0]-b1[0])/num)*i + b1[0],'   ', ((b2[1]-b1[1])/num)*i + b1[1],'   ', ((b2[2]-b1[2])/num)*i + b1[2], file=f3)
     		print('   ',((c2[0]-c1[0])/num)*i + c1[0],'   ', ((c2[1]-c1[1])/num)*i + c1[1],'   ', ((c2[2]-c1[2])/num)*i + c1[2], file=f3)
-    		print(' ',elename[0],'  ',elename[1],'   ', elename[2], file = f3)
-    		print(' ',elenum[0],'   ',elenum[1],'   ', elenum[2], file = f3)
+    		print(" ".join(elename), file = f3)
+    		print(" ".join(elenum_s), file = f3)
     		print('Direct',file = f3)
             
-    		for j in range(0, np.sum(elenum)):
-    			print('  ',(i*delta_x[j]+ion_PE_x[j])%1.0,'   ', (i*delta_y[j]+ion_PE_y[j])%1.0,'   ', (i*delta_z[j]+ion_PE_z[j])%1.0, file=f3)
+    		for j in range(0, num_atom):
+    			print('  ',round((i*delta_x[j]+ion_PE_x[j])%1.0, 6),'   ', round((i*delta_y[j]+ion_PE_y[j])%1.0,6),'   ', round((i*delta_z[j]+ion_PE_z[j])%1.0,6), file=f3)
 
 def main(diff_num):
     
-    ion_PE_x, ion_PE_y, ion_PE_z, elenum, elename, a1, b1, c1 = read_files("POSCAR-PE.vasp")
-    ion_FE_x, ion_FE_y, ion_FE_z, elenum, elename, a2, b2, c2 = read_files("POSCAR-FE.vasp")
+    ion_PE_x, ion_PE_y, ion_PE_z, elenum, elename, a1, b1, c1 = read_files("Bilayer_AA_stacking_r1.vasp")
+    ion_FE_x, ion_FE_y, ion_FE_z, elenum, elename, a2, b2, c2 = read_files("Bilayer_AB_stacking_r1.vasp")
     delta_x, delta_y, delta_z = diff_pos_FE_PE(diff_num, ion_PE_x, ion_PE_y, ion_PE_z, ion_FE_x, ion_FE_y, ion_FE_z)
     write_pos(diff_num, ion_PE_x, ion_PE_y, ion_PE_z, elenum, elename, a1, b1, c1, a2, b2, c2, delta_x, delta_y, delta_z)
 
