@@ -5,7 +5,7 @@ Sa = '  '
 Sb = '  '
 Sc = '  '
 
-with open('231.vasp','r') as f: 
+with open('POSCAR','r') as f: 
 	f.readline()
 	f.readline()
 	a = f.readline()
@@ -30,5 +30,4 @@ with open('231.vasp','r') as f:
 			print(Sc, file = f2)
 			print(" ".join(elename),  file = f2)
 			print(" ".join(elenum), file = f2)
-			print('Direct', file = f2)
 			print(ion_pos, file = f2)
