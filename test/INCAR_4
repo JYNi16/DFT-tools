@@ -1,0 +1,58 @@
+PREC   = A
+ENCUT=500
+
+NELM = 100
+NSW = 100
+ISTART = 0     #control input wavefunction   WAVECAR
+ICHARG = 2   #control input charge density CHGCAR
+
+
+ Electronic Relaxation 1
+   EDIFF  =   1E-7  stopping-criterion for ELM
+   EDIFFG = -0.001
+
+ Ionic Relaxation
+   IBRION =  2 ionic relax: 0-MD 1-quasi-New 2-CG
+   ISIF   =  3   stress and relaxation
+   ISYM   =  2
+
+ DOS related values:
+   ISMEAR =     0;   SIGMA  =    0.05 broadening in eV -4-tet -1-fermi 0-gaus
+
+ Electronic Relaxation 2
+   IALGO  =      38    algorithm
+   LDIAG  =      T    sub-space diagonalisation
+   LREAL  =     F    real-space projection
+ADDGRID=T
+ NCORE = 4
+ LPLANE =T
+
+ISPIN=2
+
+GGA_COMPAT = .FALSE.
+
+LDAU = .TRUE. Switches on the L(S)DA+U.
+LDAUTYPE = 2
+LDAUL =  2 -1 -1 
+LDAUU = 4.5 0 0
+LDAUJ =  0.5 0 0 
+LMAXMIX = 4
+LORBIT=11
+#I_CONSTRAINED_M = 1 
+#LAMBDA = 0.0 
+#MAGMOM = 2 0 0 6*0
+#M_CONSTR = 2 0 0 6*0  
+#LSPIRAL = T 
+#QSPIRAL = 0.1 0.0 0.0
+MAGMOM =  3 3 3*0  
+ 
+ LWAVE  =      F    write WAVECAR
+ LCHARG =      F   write CHGCAR
+#LBERRY = T
+#IGPAR = 1
+#NPPSTR = 12
+#DIPOL = 0.0 0.0 0.0
+IOPTCELL = 1 1 0 1 1 0 0 0 0 
+
+MAGMOM = -5 0 0 0 0 5 0 -5 0 0 0 5 0 0 5 0 0 5 30*0
+M_CONSTR = -5 0 0 0 0 5 0 -5 0 0 0 5 0 0 5 0 0 5 30*0
